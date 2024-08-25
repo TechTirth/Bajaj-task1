@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BFHL JSON Response Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .result {
+            margin-top: 20px;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border: 1px solid #ced4da;
+        }
+        pre {
+            margin: 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>BFHL JSON Response Viewer</h1>
+
+        <div class="form-group">
+            <label for="data">Enter data (comma-separated values):</label>
+            <input type="text" id="data" placeholder="e.g., 1, a, 2, b, c, 3">
+        </div>
+
+        <button onclick="submitData()">Submit</button>
+
+        <div class="result">
+            <h3>Response:</h3>
+            <pre id="response"></pre>
+        </div>
+    </div>
+
+    <script>
+        async function submitData() {
+            const dataInput = document.getElementById('data').value;
+            const dataArray = dataInput.split(',').map(item => item.trim());
+
+            const response = await fetch('/bfhl', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ data: dataArray }),
+            });
+
+            const jsonResponse = await response.json();
+            document.getElementById('response').textContent = JSON.stringify(jsonResponse, null, 4);
+        }
+    </script>
+
+</body>
+</html>
